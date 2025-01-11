@@ -6,6 +6,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix
 
+'''
+Links 
+https://xgboost.readthedocs.io/en/latest/python/python_api.html
+https://xgboost.readthedocs.io/en/latest/python/python_api.html#xgboost.XGBClassifier
+'''
+
 # Load and prepare the data
 df = pd.read_csv('./dataset.csv')
 
