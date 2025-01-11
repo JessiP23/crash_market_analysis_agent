@@ -109,6 +109,7 @@ with tab1:
          # Display the anomaly detection plot
         st.pyplot(fig_anomaly)
 
+# risk assessment
 with tab2:
     if 'prediction' in st.session_state:
         st.header('Risk Assessment Dashboard')
