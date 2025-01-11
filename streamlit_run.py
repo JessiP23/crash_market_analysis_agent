@@ -65,6 +65,7 @@ with tab1:
         with col1:
             st.subheader('Market Status')
             if prediction == 1:
+                 # Display error message for market stress
                 st.error('⚠️ MARKET STRESS DETECTED')
                 st.warning(f'Stress Probability: {probability[1]:.1%}')
             else:
