@@ -10,10 +10,31 @@ scaler = joblib.load('scaler.pkl')
 
 # Function to prepare data
 def prepare_data(df):
+    # Print the columns for debugging
+    print("Columns in the DataFrame:", df.columns.tolist())
+    
+    # Ensure only relevant columns are kept
+    relevant_columns = ['MXWO Index', 'BDIY Index', 'CO1 Comdty', 'CRY Index', 'Cl1 Comdty', 'DU1 Comdty']  # Add all relevant features used during training
+    
+    # Check if all relevant columns are in the DataFrame
+    missing_columns = [col for col in relevant_columns if col not in df.columns]
+    if missing_columns:
+        raise KeyError(f"Missing columns in DataFrame: {missing_columns}")
+    
+    df = df[relevant_columns]  # Keep only relevant columns
+
+    # Calculate returns for MXWO Index (world market index)
     df['MXWO Index_returns'] = df['MXWO Index'].pct_change()
+    
+    # Define crash as a drop of more than 2% in world market
     df['crash'] = (df['MXWO Index_returns'] <= -0.02).astype(int)
+    
+    # Remove rows with NaN values
     df = df.dropna()
+    
+    # Exclude 'crash' and 'MXWO Index_returns' from features
     feature_columns = [col for col in df.columns if col not in ['crash', 'MXWO Index_returns']]
+    
     return df, feature_columns
 
 # Streamlit app
@@ -28,8 +49,7 @@ if st.button("Fetch Data"):
     # Fetch data from yfinance
     df = yf.download(ticker, start=start_date, end=end_date)
     df.reset_index(inplace=True)
-    df['MXWO Index'] = df['Close']  # Assuming MXWO Index is the Close price for simplicity
-
+    
     # Prepare data
     df, feature_columns = prepare_data(df)
 
