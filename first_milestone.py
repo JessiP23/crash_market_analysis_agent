@@ -8,7 +8,6 @@ from sklearn.linear_model import LogisticRegression
 import xgboost as xgb
 import matplotlib.pyplot as plt
 import seaborn as sns
-import yfinance as yf
 import streamlit as st
 import joblib  
 from xgboost import XGBClassifier
