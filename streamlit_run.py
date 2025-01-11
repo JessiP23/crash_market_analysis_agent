@@ -11,7 +11,7 @@ import seaborn as sns
 model = joblib.load('market_stress_model.pkl')
 scaler = joblib.load('feature_scaler.pkl')
 
-# Set page configuration
+# Set page configuration for streamlit
 st.set_page_config(page_title="Market Stress Early Warning System", layout="wide")
 
 # Main title and description
