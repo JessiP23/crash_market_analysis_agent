@@ -99,6 +99,8 @@ with tab1:
         plt.scatter(list(returns_data.values()), list(volatility_data.values()), c=['red' if abs(r)+v > 0.1 else 'blue' for r, v in zip(returns_data.values(), volatility_data.values())], s=100)
         plt.xlabel('Returns')
         plt.ylabel('Volatility')
+
+        # Annotate each point with the indicator name
         for i, txt in enumerate(returns_data.keys()):
             plt.annotate(txt, (list(returns_data.values())[i], list(volatility_data.values())[i]))
         plt.title('Market Indicators Anomaly Detection')
