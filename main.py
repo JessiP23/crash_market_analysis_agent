@@ -160,9 +160,11 @@ def investment_strategy(predictions, returns, threshold=0.5):
     strategy_returns = []
     for pred, ret in zip(predictions, returns):
         if pred > threshold:
-            strategy_returns.append(0)  # Move to cash during predicted crashes
+            # Move to cash during predicted crashes
+            strategy_returns.append(0) 
         else:
-            strategy_returns.append(ret)  # Use actual market returns otherwise
+            # Use actual market returns otherwise
+            strategy_returns.append(ret)  
     return np.array(strategy_returns)
 
 # Use the best model (XGBoost) to predict probabilities
