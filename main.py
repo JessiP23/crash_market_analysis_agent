@@ -44,6 +44,10 @@ scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X)
 
 # Train the model using all data
+# Select best model 
+# XGBoost outperforms accuracy and speed with large datasets.
+# Overfitting L1 (Lasso) and L2 (Ridge) regularization
+# Parallel processing
 model = XGBClassifier(random_state=42)
 model.fit(X_scaled, y)
 
