@@ -158,6 +158,7 @@ best_model = models['XGBoost']
 # Feature importance for XGBoost
 feature_importance = pd.DataFrame({
     'feature': feature_columns,
+    # Get feature importance from the model
     'importance': best_model.feature_importances_
 })
 feature_importance = feature_importance.sort_values('importance', ascending=False)
