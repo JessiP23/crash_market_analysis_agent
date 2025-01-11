@@ -28,7 +28,7 @@ tab1, tab2, tab3 = st.tabs(["Market Analysis", "Risk Assessment", "Strategy Reco
 with tab1:
     st.header('Enter Market Indicators')
     
-    # Create input fields for features
+    # Create input fields for market indicators
     features = {}
     for feature, display_name in zip(
         ['MXWO Index', 'MXUS Index', 'GC1 Comdty', 'Cl1 Comdty', 'VIX Index', 'DXY Curncy'],
