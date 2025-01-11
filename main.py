@@ -284,7 +284,7 @@ explanation = investment_bot.explain_prediction(latest_features, latest_prob)
 print(explanation)
 
 # Save the model and scaler as .pkl files
-joblib.dump(best_model, 'market_crash_model.pkl')  # Save the model
-joblib.dump(scaler, 'scaler.pkl')              # Save the scaler
+joblib.dump(best_model, 'market_crash_model.pkl')  
+joblib.dump(scaler, 'scaler.pkl')           
 
 print("Model and scaler saved successfully as .pkl files.")
