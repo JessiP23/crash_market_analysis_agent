@@ -184,6 +184,8 @@ def investment_strategy(predictions, returns, threshold=0.5):
 
     # list to store strategy returns
     strategy_returns = []
+
+    
     for pred, ret in zip(predictions, returns):
         if pred > threshold:
             # Move to cash during predicted crashes
