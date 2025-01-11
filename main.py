@@ -63,6 +63,8 @@ print(feature_names)
 
 # Print basic model evaluation metrics on the training data
 y_pred = model.predict(X_scaled)
+
+# predictions on training data
 accuracy = (y == y_pred).mean()
 print(f"Model accuracy on training data: {accuracy:.2%}")
 
