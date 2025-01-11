@@ -156,3 +156,55 @@ plt.show()
 print("Final Cumulative Market Returns:", cumulative_market_returns[-1])
 print("Final Cumulative Strategy Returns:", cumulative_strategy_returns[-1])
 
+
+
+
+# third milestone
+# Milestone 3: AI-driven bot for explaining investment strategy
+
+class InvestmentBot:
+    def __init__(self, model, feature_importance, feature_names):
+        self.model = model
+        self.feature_importance = feature_importance
+        self.feature_names = feature_names
+        
+    def explain_prediction(self, features, prediction_prob):
+        """Explains the model's prediction in natural language."""
+        risk_level = "high" if prediction_prob > 0.5 else "low"
+        
+        # Get top contributing features
+        top_features = self.feature_importance.head(3)
+        
+        explanation = f"""
+        Market Crash Risk Assessment:
+        - Current risk level: {risk_level} (probability: {prediction_prob:.1%})
+        
+        Key factors influencing this prediction:
+        """
+        
+        for _, row in top_features.iterrows():
+            feature = row['feature']
+            importance = row['importance']
+            explanation += f"- {feature}: {importance:.1%} importance\
+"
+            
+        recommendation = """
+        Investment Recommendation:
+        """
+        if prediction_prob > 0.5:
+            recommendation += "- Consider moving to defensive positions or cash"
+        else:
+            recommendation += "- Market conditions appear favorable for maintaining positions"
+            
+        return explanation + recommendation
+
+# Demonstrate the bot's functionality with the latest data point
+latest_features = X_test_scaled[-1]
+latest_prob = best_model.predict_proba(latest_features.reshape(1, -1))[0, 1]
+
+# Create bot instance
+investment_bot = InvestmentBot(best_model, feature_importance, feature_columns)
+
+# Get and print explanation
+explanation = investment_bot.explain_prediction(latest_features, latest_prob)
+print(explanation)
