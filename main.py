@@ -24,7 +24,9 @@ for col in feature_columns:
     # Calculate rolling volatility 20 days
     df[f'{col}_volatility'] = df[col].rolling(window=20).std()  
 
-df = df.dropna()  # Remove rows with NaN values
+
+# Remove rows with NaN values
+df = df.dropna()  #
 
 # Define market crash conditions using VIX as an indicator
 df['market_stress'] = (df['VIX Index'] > df['VIX Index'].mean() + df['VIX Index'].std()).astype(int)
