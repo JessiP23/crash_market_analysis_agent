@@ -11,6 +11,8 @@ import seaborn as sns
 import yfinance as yf
 import streamlit as st
 import joblib  
+from xgboost import XGBClassifier
+import torch
 
 # %pip install streamlit yfinance scikit-learn tensorflow
 
@@ -293,3 +295,56 @@ print("\
 Why XGBoost was the Best Option:")
 print(xgboost_reasoning)
 '''
+
+
+
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from xgboost import XGBClassifier
+import joblib
+
+# Function to prepare data
+def prepare_data(df):
+    # Set the first column as the index and convert it to datetime
+    df.index = pd.to_datetime(df.iloc[:, 0], errors='coerce')  # Use the first column as the date index
+    df = df.iloc[:, 1:]  # Drop the first column after setting it as index
+    
+    # Calculate returns for MXWO Index (world market index)
+    df['MXWO Index_returns'] = df['MXWO Index'].pct_change()
+    
+    # Define crash as a drop of more than 2% in world market
+    df['crash'] = (df['MXWO Index_returns'] <= -0.02).astype(int)
+    
+    # Remove rows with NaN values
+    df = df.dropna()
+    
+    # Exclude 'crash' and 'MXWO Index_returns' from features
+    feature_columns = [col for col in df.columns if col not in ['crash', 'MXWO Index_returns']]
+    
+    return df, feature_columns
+
+# Function to train the model
+def train_model(df, feature_columns):
+    X = df[feature_columns]
+    y = df['crash']
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    model = XGBClassifier(scale_pos_weight=10, random_state=42)
+    model.fit(X_train_scaled, y_train)
+    return model, scaler
+
+# Load your dataset
+df = pd.read_csv('dataset.csv', header=0)  # Load the dataset without parsing dates initially
+df, feature_columns = prepare_data(df)
+
+# Train the model
+model, scaler = train_model(df, feature_columns)
+
+# Save the model and scaler as .pkl files
+joblib.dump(model, 'market_crash_model.pkl')  # Save the model
+joblib.dump(scaler, 'scaler.pkl')              # Save the scaler
+
+print("Model and scaler saved successfully as .pkl files.")
