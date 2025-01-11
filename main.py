@@ -165,6 +165,8 @@ feature_importance = feature_importance.sort_values('importance', ascending=Fals
 
 print("\
 Top 10 Most Important Features:")
+
+# Print the top 10 most important feature
 print(feature_importance.head(10))
 
 
