@@ -10,24 +10,22 @@ import matplotlib.pyplot as plt
 import joblib  
 from xgboost import XGBClassifier
 
-# %pip install streamlit yfinance scikit-learn tensorflow
-
 # Load and prepare the data
 df = pd.read_csv('dataset.csv')
 df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
-# Calculate returns for major indices and assets
+# Calculate returns and volatility for major indices and assets
 feature_columns = ['MXWO Index', 'MXUS Index', 'GC1 Comdty', 'Cl1 Comdty', 'VIX Index', 'DXY Curncy']
 for col in feature_columns:
-    df[f'{col}_returns'] = df[col].pct_change()
-    df[f'{col}_volatility'] = df[col].rolling(window=20).std()
+    df[f'{col}_returns'] = df[col].pct_change()  # Calculate daily returns
+    df[f'{col}_volatility'] = df[col].rolling(window=20).std()  # Calculate rolling volatility
 
-df = df.dropna()
+df = df.dropna()  # Remove rows with NaN values
 
-# Define market crash conditions (using VIX as an indicator)
+# Define market crash conditions using VIX as an indicator
 df['market_stress'] = (df['VIX Index'] > df['VIX Index'].mean() + df['VIX Index'].std()).astype(int)
 
-# Prepare features and target
+# Prepare features and target variable
 X = df[[col for col in df.columns if '_returns' in col or '_volatility' in col]]
 y = df['market_stress']
 
@@ -49,40 +47,39 @@ print("Model and scaler saved successfully!")
 print("Feature names for reference:")
 print(feature_names)
 
-# Print some basic model evaluation metrics on the training data
+# Print basic model evaluation metrics on the training data
 y_pred = model.predict(X_scaled)
 accuracy = (y == y_pred).mean()
 print(f"Model accuracy on training data: {accuracy:.2%}")
 
-
-
-# Define market crash conditions (more sophisticated approach)
+# Define more sophisticated market crash conditions
 lookback_period = 20
 volatility_window = 60
 
-# Calculate rolling volatility
+# Calculate rolling volatility and moving average for VIX
 df['MXWO_volatility'] = df['MXWO Index_returns'].rolling(window=volatility_window).std()
 df['VIX_MA'] = df['VIX Index'].rolling(window=lookback_period).mean()
 
 # Define crash conditions
 crash_threshold = -0.02  # 2% daily drop
-vix_threshold = 1.5     # VIX 50% above its moving average
+vix_threshold = 1.5  # VIX 50% above its moving average
 
-df['crash'] = ((df['MXWO Index_returns'] <= crash_threshold) & 
-               (df['VIX Index'] >= df['VIX_MA'] * vix_threshold)).astype(int)
+# Identify crashes based on defined conditions
+df['crash'] = ((df['MXWO Index_returns'] <= crash_threshold) & (df['VIX Index'] >= df['VIX_MA'] * vix_threshold)).astype(int)
 
 # Feature engineering
 df['yield_curve'] = df['USGG30YR Index'] - df['USGG2YR Index']
 df['gold_oil_ratio'] = df['GC1 Comdty'] / df['Cl1 Comdty']
 df['vix_change'] = df['VIX Index'].pct_change()
 
-# Select features
+# Select features for the clean dataset
 feature_columns = [
     'XAU BGNL Curncy', 'BDIY Index', 'CRY Index', 'DXY Curncy',
     'VIX Index', 'USGG30YR Index', 'GT10 Govt', 'USGG2YR Index',
     'yield_curve', 'gold_oil_ratio', 'vix_change',
     'MXWO Index_returns', 'GC1 Comdty_returns', 'Cl1 Comdty_returns'
 ]
+
 
 # Prepare clean dataset
 df_clean = df[feature_columns + ['crash', 'Date']].copy()
@@ -94,6 +91,7 @@ train_size = int(len(df_clean) * 0.8)
 df_train = df_clean.iloc[:train_size]
 df_test = df_clean.iloc[train_size:]
 
+# Prepare training and testing data
 X_train = df_train[feature_columns]
 y_train = df_train['crash']
 X_test = df_test[feature_columns]
