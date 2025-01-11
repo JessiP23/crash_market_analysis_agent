@@ -229,6 +229,8 @@ print("Final Cumulative Strategy Returns:", cumulative_strategy_returns[-1])
 
 class InvestmentBot:
     def __init__(self, model, feature_importance, feature_names):
+
+        #store the model, feature importance, and feature names
         self.model = model
         self.feature_importance = feature_importance
         self.feature_names = feature_names
