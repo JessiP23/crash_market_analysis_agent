@@ -8,6 +8,7 @@ from sklearn.linear_model import LogisticRegression
 import xgboost as xgb
 import matplotlib.pyplot as plt
 import seaborn as sns
+import yfinance as yf
 import streamlit as st
 import joblib  
 from xgboost import XGBClassifier
@@ -17,11 +18,47 @@ import torch
 
 # Load and prepare the data
 df = pd.read_csv('dataset.csv')
-df['Date'] = pd.to_datetime(df['Ticker'])
+df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
 # Calculate returns for major indices and assets
-for col in ['MXWO Index', 'MXUS Index', 'GC1 Comdty', 'Cl1 Comdty']:
+feature_columns = ['MXWO Index', 'MXUS Index', 'GC1 Comdty', 'Cl1 Comdty', 'VIX Index', 'DXY Curncy']
+for col in feature_columns:
     df[f'{col}_returns'] = df[col].pct_change()
+    df[f'{col}_volatility'] = df[col].rolling(window=20).std()
+
+df = df.dropna()
+
+# Define market crash conditions (using VIX as an indicator)
+df['market_stress'] = (df['VIX Index'] > df['VIX Index'].mean() + df['VIX Index'].std()).astype(int)
+
+# Prepare features and target
+X = df[[col for col in df.columns if '_returns' in col or '_volatility' in col]]
+y = df['market_stress']
+
+# Scale the features
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Train the model using all data
+model = XGBClassifier(random_state=42)
+model.fit(X_scaled, y)
+
+# Save both the model and scaler
+joblib.dump(model, 'market_stress_model.pkl')
+joblib.dump(scaler, 'feature_scaler.pkl')
+
+# Print feature names for future reference
+feature_names = X.columns.tolist()
+print("Model and scaler saved successfully!")
+print("Feature names for reference:")
+print(feature_names)
+
+# Print some basic model evaluation metrics on the training data
+y_pred = model.predict(X_scaled)
+accuracy = (y == y_pred).mean()
+print(f"Model accuracy on training data: {accuracy:.2%}")
+
+
 
 # Define market crash conditions (more sophisticated approach)
 lookback_period = 20
@@ -215,6 +252,12 @@ investment_bot = InvestmentBot(best_model, feature_importance, feature_columns)
 explanation = investment_bot.explain_prediction(latest_features, latest_prob)
 print(explanation)
 
+# Save the model and scaler as .pkl files
+joblib.dump(best_model, 'market_crash_model.pkl')  # Save the model
+joblib.dump(scaler, 'scaler.pkl')              # Save the scaler
+
+print("Model and scaler saved successfully as .pkl files.")
+
 # improve the bot
 '''
 # Enhancing the chatbot with testing logic and detailed explanations
@@ -294,58 +337,3 @@ print("\
 Why XGBoost was the Best Option:")
 print(xgboost_reasoning)
 '''
-
-# =============================================================================================================
-
-# TRAINING THE MODEL
-
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from xgboost import XGBClassifier
-import joblib
-
-# Function to prepare data
-def prepare_data(df):
-    # Set the first column as the index and convert it to datetime
-    df.index = pd.to_datetime(df.iloc[:, 0], errors='coerce')  # Use the first column as the date index
-    df = df.iloc[:, 1:]  # Drop the first column after setting it as index
-    
-    # Calculate returns for MXWO Index (world market index)
-    df['MXWO Index_returns'] = df['MXWO Index'].pct_change()
-    
-    # Define crash as a drop of more than 2% in world market
-    df['crash'] = (df['MXWO Index_returns'] <= -0.02).astype(int)
-    
-    # Remove rows with NaN values
-    df = df.dropna()
-    
-    # Exclude 'crash' and 'MXWO Index_returns' from features
-    feature_columns = [col for col in df.columns if col not in ['crash', 'MXWO Index_returns']]
-    
-    return df, feature_columns
-
-# Function to train the model
-def train_model(df, feature_columns):
-    X = df[feature_columns]
-    y = df['crash']
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-    scaler = StandardScaler()
-    X_train_scaled = scaler.fit_transform(X_train)
-    model = XGBClassifier(scale_pos_weight=10, random_state=42)
-    model.fit(X_train_scaled, y_train)
-    return model, scaler
-
-# Load your dataset
-df = pd.read_csv('dataset.csv', header=0)  # Load the dataset without parsing dates initially
-df, feature_columns = prepare_data(df)
-
-# Train the model
-model, scaler = train_model(df, feature_columns)
-
-# Save the model and scaler as .pkl files
-joblib.dump(model, 'market_crash_model.pkl')  # Save the model
-joblib.dump(scaler, 'scaler.pkl')              # Save the scaler
-
-print("Model and scaler saved successfully as .pkl files.")
