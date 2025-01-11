@@ -33,6 +33,8 @@ with tab1:
     for feature, display_name in zip(
         ['MXWO Index', 'MXUS Index', 'GC1 Comdty', 'Cl1 Comdty', 'VIX Index', 'DXY Curncy'],
         ['MXWO', 'MXUS', 'GC1', 'Cl1', 'VIX', 'DXY']):
+
+        # columns for returns and volatility
         col1, col2 = st.columns(2)
         with col1:
             features[f'{feature}_returns'] = st.number_input(f'{display_name} Returns', value=0.0)
