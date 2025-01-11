@@ -94,9 +94,9 @@ with tab1:
         
         # Create anomaly detection visualization
         fig_anomaly = plt.figure(figsize=(12, 6))
-        plt.scatter(list(returns_data.values()), list(volatility_data.values()), 
-                   c=['red' if abs(r)+v > 0.1 else 'blue' for r, v in zip(returns_data.values(), volatility_data.values())],
-                   s=100)
+
+        # Scatter plot for returns vs. volatility
+        plt.scatter(list(returns_data.values()), list(volatility_data.values()), c=['red' if abs(r)+v > 0.1 else 'blue' for r, v in zip(returns_data.values(), volatility_data.values())], s=100)
         plt.xlabel('Returns')
         plt.ylabel('Volatility')
         for i, txt in enumerate(returns_data.keys()):
