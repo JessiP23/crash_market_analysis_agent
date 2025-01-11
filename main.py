@@ -19,8 +19,10 @@ df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 # Calculate returns and volatility for major indices and assets
 feature_columns = ['MXWO Index', 'MXUS Index', 'GC1 Comdty', 'Cl1 Comdty', 'VIX Index', 'DXY Curncy']
 for col in feature_columns:
-    df[f'{col}_returns'] = df[col].pct_change()  # Calculate daily returns
-    df[f'{col}_volatility'] = df[col].rolling(window=20).std()  # Calculate rolling volatility
+     # Calculate daily returns for each feature
+    df[f'{col}_returns'] = df[col].pct_change()
+    # Calculate rolling volatility 20 days
+    df[f'{col}_volatility'] = df[col].rolling(window=20).std()  
 
 df = df.dropna()  # Remove rows with NaN values
 
