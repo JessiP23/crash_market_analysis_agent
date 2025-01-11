@@ -12,6 +12,8 @@ from xgboost import XGBClassifier
 
 # Load and prepare the data from csv
 df = pd.read_csv('dataset.csv')
+
+# convert date to datetime
 df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
 # Calculate returns and volatility for major indices and assets
