@@ -150,8 +150,6 @@ print(feature_importance.head(10))
 
 #  Second milestone
 
-# Milestone 2: Develop a data-driven investment strategy
-
 # Define a simple investment strategy based on model predictions
 def investment_strategy(predictions, returns, threshold=0.5):
     """
