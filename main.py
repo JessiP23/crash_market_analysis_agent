@@ -250,9 +250,13 @@ class InvestmentBot:
         Key factors influencing this prediction:
         """
         
+        
         for _, row in top_features.iterrows():
+            # Get feature name and importance
             feature = row['feature']
             importance = row['importance']
+
+            # add feature explanation
             explanation += f"- {feature}: {importance:.1%} importance\
 "
             
