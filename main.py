@@ -237,6 +237,8 @@ class InvestmentBot:
         
     def explain_prediction(self, features, prediction_prob):
         """Explains the model's prediction in natural language."""
+
+        # Determine risk level based on prediction probability
         risk_level = "high" if prediction_prob > 0.5 else "low"
         
         # Get top contributing features
