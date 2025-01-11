@@ -1,18 +1,14 @@
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
+from sklearn.metrics import classification_report, roc_auc_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 import xgboost as xgb
 import matplotlib.pyplot as plt
-import seaborn as sns
-import yfinance as yf
-import streamlit as st
 import joblib  
 from xgboost import XGBClassifier
-import torch
 
 # %pip install streamlit yfinance scikit-learn tensorflow
 
