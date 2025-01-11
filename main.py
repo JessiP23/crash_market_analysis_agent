@@ -244,8 +244,7 @@ class InvestmentBot:
         # Get top contributing features
         top_features = self.feature_importance.head(3)
         
-        explanation = f"""
-        Market Crash Risk Assessment:
+        explanation = f""" Market Crash Risk Assessment:
         - Current risk level: {risk_level} (probability: {prediction_prob:.1%})
         
         Key factors influencing this prediction:
