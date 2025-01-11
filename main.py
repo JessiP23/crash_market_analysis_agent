@@ -264,8 +264,10 @@ class InvestmentBot:
         Investment Recommendation:
         """
         if prediction_prob > 0.5:
+            # Recommendation for high risk
             recommendation += "- Consider moving to defensive positions or cash"
         else:
+            # Recommendation for low risk
             recommendation += "- Market conditions appear favorable for maintaining positions"
             
         return explanation + recommendation
