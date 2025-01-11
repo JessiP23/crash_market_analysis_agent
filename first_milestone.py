@@ -2,12 +2,14 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 import xgboost as xgb
 import matplotlib.pyplot as plt
 import seaborn as sns
+import yfinance as yf
+import streamlit as st  
 
 # %pip install streamlit yfinance scikit-learn tensorflow
 
@@ -84,7 +86,7 @@ for name, model in models.items():
     results[name] = {
         'accuracy': model.score(X_test_scaled, y_test),
         'roc_auc': roc_auc_score(y_test, y_pred_proba),
-        'report': classification_report(y_test, y_pred)
+        'report': classification_report(y_test, y_pred, zero_division=1)
     }
 
 # Print results
