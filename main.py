@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 from datetime import datetime
+import xgboost as xgb
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import classification_report, confusion_matrix
 
 # Load and prepare the data
 df = pd.read_csv('./dataset.csv')
@@ -46,3 +50,52 @@ print(f"Crash ratio: {crash_ratio:.2%}")
 print("\
 Prepared Dataset Preview:")
 print(df_clean.head())
+
+
+
+# Prepare features and target
+X = df_clean.drop('crash', axis=1)
+y = df_clean['crash']
+
+# Split the data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+
+# Scale the features
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Initialize and train XGBoost model
+model = xgb.XGBClassifier(
+    learning_rate=0.01,
+    n_estimators=200,
+    max_depth=4,
+    min_child_weight=6,
+    gamma=0,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    objective='binary:logistic',
+    scale_pos_weight=10,  # Handle class imbalance
+    random_state=42
+)
+
+model.fit(X_train_scaled, y_train)
+
+# Make predictions
+y_pred = model.predict(X_test_scaled)
+y_pred_proba = model.predict_proba(X_test_scaled)[:, 1]
+
+# Print classification report
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+
+# Feature importance
+feature_importance = pd.DataFrame({
+    'feature': X.columns,
+    'importance': model.feature_importances_
+})
+feature_importance = feature_importance.sort_values('importance', ascending=False)
+
+print("\
+Top 10 Most Important Features:")
+print(feature_importance.head(10))
