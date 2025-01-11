@@ -69,6 +69,7 @@ with tab1:
                 st.error('⚠️ MARKET STRESS DETECTED')
                 st.warning(f'Stress Probability: {probability[1]:.1%}')
             else:
+                 # normal conditions
                 st.success('✅ NORMAL MARKET CONDITIONS')
                 st.info(f'Stress Probability: {probability[1]:.1%}')
 
