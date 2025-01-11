@@ -71,8 +71,10 @@ df['MXWO_volatility'] = df['MXWO Index_returns'].rolling(window=volatility_windo
 df['VIX_MA'] = df['VIX Index'].rolling(window=lookback_period).mean()
 
 # Define crash conditions
-crash_threshold = -0.02  # 2% daily drop
-vix_threshold = 1.5  # VIX 50% above its moving average
+crash_threshold = -0.02
+
+# VIX 50% above its moving average
+vix_threshold = 1.5  
 
 # Identify crashes based on defined conditions
 df['crash'] = ((df['MXWO Index_returns'] <= crash_threshold) & (df['VIX Index'] >= df['VIX_MA'] * vix_threshold)).astype(int)
