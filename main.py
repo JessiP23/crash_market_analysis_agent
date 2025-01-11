@@ -33,6 +33,8 @@ df['market_stress'] = (df['VIX Index'] > df['VIX Index'].mean() + df['VIX Index'
 
 # Prepare features and target variable
 X = df[[col for col in df.columns if '_returns' in col or '_volatility' in col]]
+
+# Variable for market stress
 y = df['market_stress']
 
 # Scale the features
