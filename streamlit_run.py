@@ -76,6 +76,8 @@ with tab1:
         with col2:
             # Stress probability gauge
             fig_gauge = plt.figure(figsize=(8, 4))
+
+            # PIE CHART
             plt.pie([probability[1], 1-probability[1]], 
                    colors=['red' if probability[1] > 0.5 else 'orange', 'lightgray'],
                    labels=[f'Stress: {probability[1]:.1%}', f'Normal: {probability[0]:.1%}'],
