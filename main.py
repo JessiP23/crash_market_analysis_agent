@@ -132,6 +132,9 @@ for name, metrics in results.items():
     print(metrics['report'])
 
 # Select best model 
+# XGBoost outperforms accuracy and speed with large datasets.
+# Overfitting L1 (Lasso) and L2 (Ridge) regularization
+# Parallel processing
 best_model = models['XGBoost']
 
 # Feature importance for XGBoost
