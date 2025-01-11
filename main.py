@@ -131,7 +131,7 @@ for name, metrics in results.items():
     print("Classification Report:")
     print(metrics['report'])
 
-# Select best model (XGBoost in this case)
+# Select best model 
 best_model = models['XGBoost']
 
 # Feature importance for XGBoost
