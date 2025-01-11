@@ -105,6 +105,8 @@ with tab1:
             plt.annotate(txt, (list(returns_data.values())[i], list(volatility_data.values())[i]))
         plt.title('Market Indicators Anomaly Detection')
         plt.grid(True)
+
+         # Display the anomaly detection plot
         st.pyplot(fig_anomaly)
 
 with tab2:
