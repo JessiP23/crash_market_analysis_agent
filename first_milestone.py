@@ -296,7 +296,9 @@ Why XGBoost was the Best Option:")
 print(xgboost_reasoning)
 '''
 
+# =============================================================================================================
 
+# TRAINING THE MODEL
 
 import pandas as pd
 import numpy as np
