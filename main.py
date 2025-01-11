@@ -39,6 +39,8 @@ y = df['market_stress']
 
 # Scale the features
 scaler = StandardScaler()
+
+# Transform the features
 X_scaled = scaler.fit_transform(X)
 
 # Train the model using all data
