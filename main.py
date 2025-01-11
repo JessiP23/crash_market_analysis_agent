@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import joblib  
 from xgboost import XGBClassifier
 
-# Load and prepare the data
+# Load and prepare the data from csv
 df = pd.read_csv('dataset.csv')
 df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
 
