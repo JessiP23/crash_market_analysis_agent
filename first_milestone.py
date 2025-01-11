@@ -9,6 +9,8 @@ import xgboost as xgb
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# %pip install streamlit yfinance scikit-learn tensorflow
+
 # Load and prepare the data
 df = pd.read_csv('dataset.csv')
 df['Date'] = pd.to_datetime(df['Ticker'])
