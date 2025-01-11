@@ -41,6 +41,8 @@ with tab1:
         with col2:
             features[f'{feature}_volatility'] = st.number_input(f'{display_name} Volatility', value=0.0)
 
+
+    # Analyze market conditions
     if st.button('Analyze Market Conditions'):
         # Prepare input data
         input_data = pd.DataFrame([features])
