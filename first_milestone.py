@@ -9,7 +9,8 @@ import xgboost as xgb
 import matplotlib.pyplot as plt
 import seaborn as sns
 import yfinance as yf
-import streamlit as st  
+import streamlit as st
+import joblib  
 
 # %pip install streamlit yfinance scikit-learn tensorflow
 
