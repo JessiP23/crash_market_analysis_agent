@@ -112,6 +112,7 @@ df_test = df_clean.iloc[train_size:]
 # Prepare training and testing data
 X_train = df_train[feature_columns]
 y_train = df_train['crash']
+# Prepare testing data
 X_test = df_test[feature_columns]
 y_test = df_test['crash']
 
@@ -134,6 +135,7 @@ for name, model in models.items():
     y_pred = model.predict(X_test_scaled)
     y_pred_proba = model.predict_proba(X_test_scaled)[:, 1]
     
+    # Calculate metrics
     results[name] = {
         'accuracy': model.score(X_test_scaled, y_test),
         'roc_auc': roc_auc_score(y_test, y_pred_proba),
