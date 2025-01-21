@@ -186,6 +186,9 @@ def investment_strategy(predictions, returns, threshold=0.5):
     strategy_returns = []
 
 
+    #Simplistic binary strategy
+    # If the model predicts a crash (probability > threshold), move to cash (0% return).
+    # Otherwise, invest in the market (use actual returns).
     for pred, ret in zip(predictions, returns):
         if pred > threshold:
             # Move to cash during predicted crashes
